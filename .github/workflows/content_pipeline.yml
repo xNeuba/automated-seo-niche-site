@@ -1,0 +1,40 @@
+name: Auto-SEO Content Pipeline
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Läuft jeden Sonntag um Mitternacht
+  workflow_dispatch: # Manuelles Auslösen zum Testen
+
+jobs:
+  generate-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-genai
+
+      - name: Generate Content
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          # Führt das Skript aus - wir müssen hier ggf. Keywords übergeben
+          python scripts/generate_content.py <<EOF
+          Beste Smart-Home Gadgets 2026
+          EOF
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/pages/posts/*.md
+          git commit -m "chore: auto-generate new seo content" || echo "No changes to commit"
+          git push
