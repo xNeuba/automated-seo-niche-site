@@ -1,19 +1,9 @@
 ---
 import PostLayout from '../layouts/PostLayout.astro';
-const allPosts = await Astro.glob('./posts/*.md');
 ---
 <PostLayout title="Startseite">
     <h1>Die besten DIY-Gadget Anleitungen</h1>
-    <p>Hier findest du clevere Alternativen zu teuren Produkten. Alles selbst gebaut, alles effizient.</p>
-    
-    <h2>Aktuelle Anleitungen</h2>
     <ul>
-        {allPosts.map(post => (
-            <li>
-                <a href={post.url} style="font-size: 1.2rem; text-decoration: none; color: #e67e22;">
-                    {post.frontmatter.title}
-                </a>
-            </li>
-        ))}
+        <li><a href="/posts/diy-ton-klimaanlage">DIY Ton-Klimaanlage</a></li>
     </ul>
 </PostLayout>
