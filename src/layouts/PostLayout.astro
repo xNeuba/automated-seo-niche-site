@@ -1,0 +1,21 @@
+---
+const { title } = Astro.props;
+---
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>{title} | DIY Gadget Magazin</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; }
+        h2 { color: #e67e22; margin-top: 30px; }
+        .affiliate-box { background: #f9f9f9; padding: 15px; border-left: 5px solid #e67e22; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <article>
+        <h1>{title}</h1>
+        <slot />
+    </article>
+</body>
+</html>

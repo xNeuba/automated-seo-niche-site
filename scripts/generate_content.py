@@ -4,23 +4,19 @@ from google import genai
 # Initialisierung mit dem Client
 client = genai.Client(api_key="AQ.Ab8RN6LyWyGX3mNZzqsHSWfv3qLiU6HMpAoKiTymxbc9ztvaVw")
 
-def generate_seo_article(topic):
-    # Optimierter Experten-Prompt
+def generate_diy_guide(topic, problem_solution):
     prompt = f"""
-    Schreibe einen tiefgreifenden, SEO-optimierten Vergleichsartikel über: '{topic}'.
+    Schreibe eine hochqualitative, detaillierte Bauanleitung für Heimwerker zum Thema: {topic}.
+    Hintergrund: {problem_solution}
     
-    Struktur-Vorgaben:
-    1. Einleitung: Benenne das Problem oder Bedürfnis des Lesers direkt.
-    2. Expertenantalyse: Vergleiche die Optionen (z.B. Öl vs. Wachs) basierend auf Fakten (Verschleiß, Wartungsaufwand, Effizienz).
-    3. Experten-Fazit: Gib eine klare Empfehlung für 'Power-User' oder spezifische Zielgruppen.
-    4. Lösung: Empfiehl den Wechsel zum empfohlenen Produkt, falls sinnvoll (z.B. Kettenwachs + neue Kette).
-    5. Call-to-Action: Füge am Ende einen natürlichen Link-Hinweis ein, z.B.: "Hier findest du das [Produkt-Empfehlung] für dein Upgrade."
+    Struktur:
+    1. H2: Warum dieses DIY-Gadget teure Produkte schlägt (Physik kurz erklären, Kosten-Nutzen-Vergleich).
+    2. H2: Einkaufsliste / Materialliste.
+    3. H2: Schritt-für-Schritt-Bauanleitung (sehr präzise, als würde ich daneben stehen).
+    4. H2: Tipps zur Optimierung und Sicherheit.
     
-    WICHTIG: 
-    - Sei objektiv, aber entscheidungsfreudig.
-    - Maximiere den Mehrwert für den Leser.
-    - Maximal 1-2 Affiliate-Produktplatzierungen (sehr subtil, nur als Lösung für das Fazit).
-    - Schreibe in flüssigem Deutsch, informativ und hilfreich.
+    WICHTIG: Schreibe authentisch, praxisnah und vermeide typisches KI-Marketing-Blabla. 
+    Markdown Format.
     """
     
     response = client.models.generate_content(
@@ -30,19 +26,27 @@ def generate_seo_article(topic):
     return response.text
 
 if __name__ == "__main__":
-    if os.path.exists("scripts/keywords.txt"):
-        with open("scripts/keywords.txt", "r") as f:
-            topics = [line.strip().replace("Thema: ", "") for line in f if line.strip()]
-        
-        for topic in topics:
-            print(f"Generiere Experten-Artikel für: {topic}")
-            content = generate_seo_article(topic)
-            
-            os.makedirs("src/pages/posts", exist_ok=True)
-            filename = f"src/pages/posts/{topic.replace(' ', '-').lower()}.md"
-            
-            with open(filename, "w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"Erstellt: {filename}")
-    else:
-        print("Datei scripts/keywords.txt nicht gefunden!")
+    topic = input("DIY-Projekt Titel: ")
+    context = input("Kurze Beschreibung/Hintergrund: ")
+    
+    print("\n--- GENERIERE ENTWURF... ---\n")
+    content = generate_diy_guide(topic, context)
+    
+    # Füge das Astro-Layout automatisch hinzu
+    final_content = f"""---
+layout: ../../layouts/PostLayout.astro
+title: "{topic}"
+---
+
+{content}
+"""
+    
+    # Speichern direkt in den fertigen Post-Ordner, da es nun "fertig" ist
+    os.makedirs("src/pages/posts", exist_ok=True)
+    filename = f"src/pages/posts/{topic.replace(' ', '-').lower()}.md"
+    
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(final_content)
+    
+    print(f"Artikel fertig generiert in: {filename}")
+    print("Prüfe ihn kurz und pushe ihn dann zu GitHub für Vercel.")
