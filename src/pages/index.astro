@@ -1,11 +1,19 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import PostLayout from '../layouts/PostLayout.astro';
+const allPosts = await Astro.glob('./posts/*.md');
 ---
-
-<Layout>
-	<Welcome />
-</Layout>
+<PostLayout title="Startseite">
+    <h1>Die besten DIY-Gadget Anleitungen</h1>
+    <p>Hier findest du clevere Alternativen zu teuren Produkten. Alles selbst gebaut, alles effizient.</p>
+    
+    <h2>Aktuelle Anleitungen</h2>
+    <ul>
+        {allPosts.map(post => (
+            <li>
+                <a href={post.url} style="font-size: 1.2rem; text-decoration: none; color: #e67e22;">
+                    {post.frontmatter.title}
+                </a>
+            </li>
+        ))}
+    </ul>
+</PostLayout>
