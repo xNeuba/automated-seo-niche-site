@@ -1,6 +1,7 @@
 ---
 import PostLayout from '../layouts/PostLayout.astro';
-const posts = await Astro.glob('./posts/*.md');
+// Astro v7 uses import.meta.glob for content discovery
+const posts = Object.values(import.meta.glob('./posts/*.md', { eager: true }));
 ---
 <PostLayout title="Startseite">
     <h1>Die besten DIY-Gadget Anleitungen</h1>
