@@ -1,9 +1,12 @@
 ---
 import PostLayout from '../layouts/PostLayout.astro';
+const posts = await Astro.glob('./posts/*.md');
 ---
 <PostLayout title="Startseite">
     <h1>Die besten DIY-Gadget Anleitungen</h1>
     <ul>
-        <li><a href="/posts/diy-ton-klimaanlage">DIY Ton-Klimaanlage</a></li>
+        {posts.map((post) => (
+            <li><a href={post.url}>{post.frontmatter.title}</a></li>
+        ))}
     </ul>
 </PostLayout>
